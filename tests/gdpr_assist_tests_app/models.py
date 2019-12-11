@@ -284,3 +284,38 @@ class ThirdSearchModel(models.Model):
         fields = ['chars', 'email']
         search_fields = ['email']
         export_exclude = ['email']
+
+
+class CustomManager(models.Manager):
+    pass
+
+
+class ModelWithCustomManager(models.Model):
+    """
+    Test PrivacyMeta manager casting
+    """
+    chars = models.CharField(max_length=255)
+    objects = CustomManager()
+
+    class PrivacyMeta:
+        fields = ['chars']
+
+
+class CustomQuerySet(models.QuerySet):
+    pass
+
+
+class CustomManagerQuerySet(models.Manager):
+    def get_queryset(self):
+        return CustomQuerySet(self.model)
+
+
+class ModelWithCustomManagerQuerySet(models.Model):
+    """
+    Test PrivacyMeta manager casting
+    """
+    chars = models.CharField(max_length=255)
+    objects = CustomManager()
+
+    class PrivacyMeta:
+        fields = ['chars']

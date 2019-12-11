@@ -6,7 +6,7 @@ import sys
 from django.core.management import call_command
 from django.test import TestCase
 
-from .gdpr_assist_tests_app.models import ModelWithPrivacyMeta
+from .gdpr_assist_tests_app.models import ModelWithPrivacyMeta, ModelWithCustomManagerQuerySet
 
 
 # If True, display output from call_command - use for debugging tests
@@ -76,6 +76,17 @@ class TestAnonymiseCommand(CommandTestCase):
         self.assertTrue(obj_1.anonymised)
         self.assertEqual(obj_1.chars, str(obj_1.pk))
         self.assertEqual(obj_1.email, '{}@anon.example.com'.format(obj_1.pk))
+
+    def test_anonymise_command__anonymises_data_when_custom_querysets(self):
+        obj_1 = ModelWithCustomManagerQuerySet.objects.create(
+            chars='test',
+        )
+        self.assertFalse(obj_1.anonymised)
+        self.run_command('anonymise_db', interactive=False)
+
+        obj_1.refresh_from_db()
+        self.assertTrue(obj_1.anonymised)
+        self.assertEqual(obj_1.chars, str(obj_1.pk))
 
     def test_anonymise_disabled__raises_error(self):
 
