@@ -17,7 +17,3 @@ env:
   - TOXENV=py38-django1.11 DATABASE_ENGINE=pgsql DATABASE_USER=postgres
   - TOXENV=py38-django2.2 DATABASE_ENGINE=pgsql DATABASE_USER=postgres
   - TOXENV=py38-django3.0 DATABASE_ENGINE=pgsql DATABASE_USER=postgres
-matrix:
-  include:
-  - python: '3.8'
-    env: TOXENV=py35-django3.0
